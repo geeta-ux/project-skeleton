@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, login_required, logout_user, current_user
-from .. import db
-from ..models.user import User
+from career_guide import db
+from career_guide.models.user import User
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -18,7 +18,7 @@ def register():
             return redirect(url_for("auth.register"))
 
         user = User(name=name, email=email)
-        user.set_password(password)  # 🔑 hash the password
+        user.set_password(password)  # hash the password
         db.session.add(user)
         db.session.commit()
 
@@ -42,8 +42,7 @@ def login():
 
         login_user(user)
         flash("Logged in successfully!", "success")
-        # Redirect to dashboard (you can later change this to main.index if you create main blueprint)
-        return redirect(url_for("auth.dashboard"))
+        return redirect(url_for("auth.dashboard"))  # or main.index if you have main blueprint
 
     return render_template("auth/login.html")
 

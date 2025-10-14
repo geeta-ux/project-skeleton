@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Add Career</h2>
+<form method="post">
+    <input type="text" name="title" placeholder="Career Title" required><br>
+    <textarea name="description" placeholder="Description"></textarea><br>
+    <button type="submit">Add Career</button>
+</form>
+<a href="{{ url_for('admin.dashboard') }}">Back to Dashboard</a>
+{% endblock %}
