@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Manage Questions</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="p-4">
+
+<h1>Manage Questions</h1>
+
+<!-- Add Question Form -->
+<h2>Add New Question</h2>
+<form method="POST">
+  <input type="hidden" name="action" value="add">
+  <div class="mb-3">
+    <label>Section</label>
+    <input type="text" name="section" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label>Difficulty</label>
+    <input type="text" name="difficulty" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label>Question Text</label>
+    <textarea name="text" class="form-control" required></textarea>
+  </div>
+  <div class="mb-3">
+    <label>Options (JSON)</label>
+    <textarea name="options" class="form-control" placeholder='["Option A","Option B"]'></textarea>
+  </div>
+  <div class="mb-3">
+    <label>Correct Option</label>
+    <input type="text" name="correct_option" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label>Weight</label>
+    <input type="number" step="0.1" name="weight" class="form-control" value="1.0">
+  </div>
+  <button type="submit" class="btn btn-success">Add Question</button>
+</form>
+
+<hr>
+
+<h2>Existing Questions</h2>
+{% if questions %}
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Section</th>
+      <th>Difficulty</th>
+      <th>Question</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for q in questions %}
+    <tr>
+      <td>{{ q.id }}</td>
+      <td>{{ q.section }}</td>
+      <td>{{ q.difficulty }}</td>
+      <td>{{ q.text }}</td>
+      <td>
+        <!-- Edit Form (inline) -->
+        <form method="POST" style="display:inline;">
+          <input type="hidden" name="action" value="edit">
+          <input type="hidden" name="question_id" value="{{ q.id }}">
+          <button type="button" class="btn btn-primary btn-sm" 
+                  data-bs-toggle="modal" data-bs-target="#editModal{{ q.id }}">Edit</button>
+
+          <!-- Modal -->
+          <div class="modal fade" id="editModal{{ q.id }}" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Edit Question</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label>Section</label>
+                    <input type="text" name="section" class="form-control" value="{{ q.section }}">
+                  </div>
+                  <div class="mb-3">
+                    <label>Difficulty</label>
+                    <input type="text" name="difficulty" class="form-control" value="{{ q.difficulty }}">
+                  </div>
+                  <div class="mb-3">
+                    <label>Question Text</label>
+                    <textarea name="text" class="form-control">{{ q.text }}</textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label>Options (JSON)</label>
+                    <textarea name="options" class="form-control">{{ q.options }}</textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label>Correct Option</label>
+                    <input type="text" name="correct_option" class="form-control" value="{{ q.correct_option }}">
+                  </div>
+                  <div class="mb-3">
+                    <label>Weight</label>
+                    <input type="number" step="0.1" name="weight" class="form-control" value="{{ q.weight }}">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- Delete Form -->
+        <form method="POST" style="display:inline;">
+          <input type="hidden" name="action" value="delete">
+          <input type="hidden" name="question_id" value="{{ q.id }}">
+          <button type="submit" class="btn btn-danger btn-sm"
+                  onclick="return confirm('Are you sure?');">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No questions added yet.</p>
+{% endif %}
+
+<a href="{{ url_for('admin.dashboard') }}">Back to Dashboard</a>
+
+</body>
+</html>

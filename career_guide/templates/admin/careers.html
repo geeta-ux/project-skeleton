@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Manage Careers</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="p-4">
+
+<h1>Manage Careers</h1>
+
+<!-- Add Career Form -->
+<h2>Add New Career</h2>
+<form method="POST">
+  <input type="hidden" name="action" value="add">
+  <div class="mb-3">
+    <label>Title</label>
+    <input type="text" name="title" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label>Track</label>
+    <input type="text" name="track" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label>Skills (JSON)</label>
+    <textarea name="skills" class="form-control" placeholder='["Python","Data Analysis"]'></textarea>
+  </div>
+  <div class="mb-3">
+    <label>Description</label>
+    <textarea name="description" class="form-control"></textarea>
+  </div>
+  <div class="mb-3">
+    <label>Average Salary Range</label>
+    <input type="text" name="avg_salary_range" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label>Sample Roles (JSON)</label>
+    <textarea name="sample_roles" class="form-control" placeholder='["Data Scientist","ML Engineer"]'></textarea>
+  </div>
+  <button type="submit" class="btn btn-success">Add Career</button>
+</form>
+
+<hr>
+
+<h2>Existing Careers</h2>
+{% if careers %}
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Track</th>
+      <th>Description</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for c in careers %}
+    <tr>
+      <td>{{ c.id }}</td>
+      <td>{{ c.title }}</td>
+      <td>{{ c.track }}</td>
+      <td>{{ c.description }}</td>
+      <td>
+        <!-- Edit Button triggers Modal -->
+        <button type="button" class="btn btn-primary btn-sm" 
+                data-bs-toggle="modal" data-bs-target="#editModal{{ c.id }}">
+          Edit
+        </button>
+
+        <!-- Edit Modal -->
+        <div class="modal fade" id="editModal{{ c.id }}" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form method="POST">
+                <input type="hidden" name="action" value="edit">
+                <input type="hidden" name="career_id" value="{{ c.id }}">
+                <div class="modal-header">
+                  <h5 class="modal-title">Edit Career</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label>Title</label>
+                    <input type="text" name="title" class="form-control" value="{{ c.title }}">
+                  </div>
+                  <div class="mb-3">
+                    <label>Track</label>
+                    <input type="text" name="track" class="form-control" value="{{ c.track }}">
+                  </div>
+                  <div class="mb-3">
+                    <label>Skills (JSON)</label>
+                    <textarea name="skills" class="form-control">{{ c.skills }}</textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label>Description</label>
+                    <textarea name="description" class="form-control">{{ c.description }}</textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label>Average Salary Range</label>
+                    <input type="text" name="avg_salary_range" class="form-control" value="{{ c.avg_salary_range }}">
+                  </div>
+                  <div class="mb-3">
+                    <label>Sample Roles (JSON)</label>
+                    <textarea name="sample_roles" class="form-control">{{ c.sample_roles }}</textarea>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delete Form -->
+        <form method="POST" style="display:inline;">
+          <input type="hidden" name="action" value="delete">
+          <input type="hidden" name="career_id" value="{{ c.id }}">
+          <button type="submit" class="btn btn-danger btn-sm"
+                  onclick="return confirm('Are you sure you want to delete this career?');">Delete</button>
+        </form>
+
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No careers added yet.</p>
+{% endif %}
+
+<a href="{{ url_for('admin.dashboard') }}">Back to Dashboard</a>
+
+</body>
+</html>

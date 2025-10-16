@@ -1,4 +1,4 @@
-from career_guide import create_app
+from career_guide import create_app,db
 
 app = create_app()
 

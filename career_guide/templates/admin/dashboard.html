@@ -1,20 +1,28 @@
-{% extends "base.html" %}
-{% block content %}
-<h1>Admin Dashboard</h1>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+</head>
+<body class="p-4">
+  <h1>Admin Dashboard</h1>
+  <a href="{{ url_for('auth.logout') }}" class="btn btn-danger">Logout</a>
 
-<h2>Careers</h2>
-<a href="{{ url_for('admin.add_career') }}">Add Career</a>
-<ul>
-  {% for c in careers %}
-  <li>{{ c.title }} - <a href="{{ url_for('admin.delete_career', id=c.id) }}">Delete</a></li>
-  {% endfor %}
-</ul>
+  <h2 class="mt-4">Careers</h2>
+  <a href="{{ url_for('admin.careers') }}" class="btn btn-primary mb-2">Manage Careers</a>
+  <ul>
+    {% for career in careers %}
+      <li>{{ career.title }}</li>
+    {% endfor %}
+  </ul>
 
-<h2>Questions</h2>
-<a href="{{ url_for('admin.add_question') }}">Add Question</a>
-<ul>
-  {% for q in questions %}
-  <li>{{ q.text }} - <a href="{{ url_for('admin.delete_question', id=q.id) }}">Delete</a></li>
-  {% endfor %}
-</ul>
-{% endblock %}
+  <h2 class="mt-4">Questions</h2>
+  <a href="{{ url_for('admin.questions') }}" class="btn btn-primary mb-2">Manage Questions</a>
+  <ul>
+    {% for question in questions %}
+      <li>{{ question.text }}</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
