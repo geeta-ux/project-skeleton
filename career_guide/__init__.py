@@ -2,6 +2,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from datetime import datetime
+
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -30,6 +32,9 @@ def create_app():
 
         # Create tables if they don't exist (optional)
         db.create_all()
+        @app.context_processor
+        def inject_now():
+         return {'now': datetime.utcnow}
 
     # Flask-Login user loader
     @login_manager.user_loader
