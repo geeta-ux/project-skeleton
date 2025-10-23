@@ -24,11 +24,14 @@ def create_app():
         from career_guide.routes.main import main_bp
         from career_guide.routes.admin import admin_bp
         from career_guide.routes.dev import dev_bp
+        from career_guide.routes.assess import assess_bp
         # Register blueprints
         app.register_blueprint(auth_bp)
         app.register_blueprint(main_bp)
         app.register_blueprint(admin_bp)
         app.register_blueprint(dev_bp)
+        app.register_blueprint(assess_bp)
+
 
         # Create tables if they don't exist (optional)
         db.create_all()

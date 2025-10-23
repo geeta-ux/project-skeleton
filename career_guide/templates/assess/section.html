@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Section: {{ section|capitalize }}</h2>
+
+<form method="post" id="section-form">
+  {% for q in questions %}
+    <div>
+      <p>{{ q.text }}</p>
+      {% for opt in q.options|fromjson %}
+        <label>
+          <input type="radio" name="q_{{ q.id }}" value="{{ opt }}"> {{ opt }}
+        </label><br>
+      {% endfor %}
+    </div>
+  {% endfor %}
+  <button type="submit">Next</button>
+</form>
+
+<script>
+let timeLeft = 300;  // 5 minutes per section
+const timer = setInterval(() => {
+  timeLeft--;
+  if(timeLeft <= 0) {
+    clearInterval(timer);
+    document.getElementById("section-form").submit();
+  }
+}, 1000);
+function saveAnswer(qid, ans) {
+  fetch("{{ url_for('assess.autosave') }}", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      question_id: qid,
+      answer: ans,
+      section: "{{ section }}"
+    })
+  });
+}
+</script>
+{% endblock %}
+    
