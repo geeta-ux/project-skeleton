@@ -13,6 +13,11 @@ class User(UserMixin, db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    assessments = db.relationship("Assessment", backref="user", cascade="all, delete-orphan")
+    responses = db.relationship("Response", backref="user", cascade="all, delete-orphan")
+    results = db.relationship("Result", backref="user", cascade="all, delete-orphan")
+
+
     @property
     def password(self):
         raise AttributeError("Password is write-only.")

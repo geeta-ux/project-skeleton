@@ -1,56 +1,248 @@
-INSERT INTO questions (text, section, difficulty, options, correct_option, weight) VALUES
-('Solve the pattern: 2, 4, 8, 16, ?', 'Logical', 'Easy', '["32","24","30","28"]', '32', 1.0),
-('Identify the synonym of "abundant"', 'Verbal', 'Easy', '["Scarce","Plentiful","Tiny","Little"]', 'Plentiful', 1.0),
-('What is 15 + 27?', 'Numerical', 'Easy', '["42","40","45","44"]', '42', 1.0),
-('Which shape comes next in the sequence?', 'Spatial', 'Medium', '["Circle","Square","Triangle","Hexagon"]', 'Triangle', 1.0),
-('Do you enjoy coding tasks?', 'Tech interest', 'Easy', '["Yes","No"]', 'Yes', 1.0),
-('Do you enjoy leading groups?', 'People/Leadership', 'Easy', '["Yes","No"]', 'Yes', 1.0),
-('Find the missing number: 5, 10, 20, 40, ?', 'Logical', 'Medium', '["60","80","70","100"]', '80', 1.0),
-('Select the antonym of "brave"', 'Verbal', 'Easy', '["Cowardly","Heroic","Bold","Fearless"]', 'Cowardly', 1.0),
-('What is 12 * 7?', 'Numerical', 'Easy', '["84","72","96","90"]', '84', 1.0),
-('Which figure completes the pattern?', 'Spatial', 'Medium', '["Star","Circle","Rectangle","Triangle"]', 'Rectangle', 1.0),
-('Do you like working with technology?', 'Tech interest', 'Easy', '["Yes","No"]', 'Yes', 1.0),
-('Do you prefer teamwork?', 'People/Leadership', 'Easy', '["Yes","No"]', 'Yes', 1.0),
-('Solve: 1, 1, 2, 3, 5, ?', 'Logical', 'Medium', '["5","8","7","6"]', '8', 1.0),
-('Choose the correct synonym of "elated"', 'Verbal', 'Medium', '["Sad","Joyful","Angry","Confused"]', 'Joyful', 1.0),
-('What is 144 ÷ 12?', 'Numerical', 'Easy', '["12","11","13","10"]', '12', 1.0),
-('Which 3D shape is this from top view?', 'Spatial', 'Hard', '["Cube","Cylinder","Cone","Sphere"]', 'Cylinder', 1.0),
-('Do you enjoy problem-solving?', 'Tech interest', 'Medium', '["Yes","No"]', 'Yes', 1.0),
-('Do you like mentoring others?', 'People/Leadership', 'Medium', '["Yes","No"]', 'Yes', 1.0),
-('Find the next in series: 3, 6, 9, 12, ?', 'Logical', 'Easy', '["15","16","18","14"]', '15', 1.0),
-('Select the antonym of "optimistic"', 'Verbal', 'Medium', '["Pessimistic","Cheerful","Happy","Bright"]', 'Pessimistic', 1.0),
-('What is 50 - 17?', 'Numerical', 'Easy', '["33","35","32","30"]', '33', 1.0),
-('Which figure rotates 90 degrees to match?', 'Spatial', 'Medium', '["Square","Triangle","Rectangle","Circle"]', 'Rectangle', 1.0),
-('Do you enjoy building websites?', 'Tech interest', 'Medium', '["Yes","No"]', 'Yes', 1.0),
-('Do you like leading projects?', 'People/Leadership', 'Medium', '["Yes","No"]', 'Yes', 1.0),
-('Solve the sequence: 10, 20, 40, 80, ?', 'Logical', 'Easy', '["100","120","160","200"]', '160', 1.0),
-('Identify the synonym of "rapid"', 'Verbal', 'Easy', '["Fast","Slow","Steady","Lazy"]', 'Fast', 1.0),
-('What is 9 * 8?', 'Numerical', 'Easy', '["72","64","81","70"]', '72', 1.0),
-('Which pattern completes the figure?', 'Spatial', 'Medium', '["Circle","Square","Triangle","Hexagon"]', 'Hexagon', 1.0),
-('Do you enjoy data analysis?', 'Tech interest', 'Medium', '["Yes","No"]', 'Yes', 1.0),
-('Do you enjoy conflict resolution?', 'People/Leadership', 'Medium', '["Yes","No"]', 'Yes', 1.0),
-('Find the missing number: 2, 6, 12, 20, ?', 'Logical', 'Medium', '["28","30","32","26"]', '30', 1.0),
-('Select the antonym of "generous"', 'Verbal', 'Medium', '["Stingy","Kind","Large","Giving"]', 'Stingy', 1.0),
-('What is 81 ÷ 9?', 'Numerical', 'Easy', '["9","8","7","10"]', '9', 1.0),
-('Which shape has the most edges?', 'Spatial', 'Medium', '["Cube","Sphere","Cone","Cylinder"]', 'Cube', 1.0),
-('Do you enjoy programming in Python?', 'Tech interest', 'Medium', '["Yes","No"]', 'Yes', 1.0),
-('Do you like organizing teams?', 'People/Leadership', 'Medium', '["Yes","No"]', 'Yes', 1.0),
-('Next in pattern: 1, 4, 9, 16, ?', 'Logical', 'Medium', '["20","25","30","36"]', '25', 1.0),
-('Choose the synonym of "ingenious"', 'Verbal', 'Medium', '["Clever","Dull","Weak","Slow"]', 'Clever', 1.0),
-('What is 14 + 29?', 'Numerical', 'Easy', '["43","44","45","42"]', '43', 1.0),
-('Which figure is symmetrical?', 'Spatial', 'Medium', '["Circle","Triangle","Arrow","Star"]', 'Circle', 1.0),
-('Do you enjoy coding competitions?', 'Tech interest', 'Medium', '["Yes","No"]', 'Yes', 1.0),
-('Do you like leading teams under pressure?', 'People/Leadership', 'Hard', '["Yes","No"]', 'Yes', 1.0),
-('Solve: 5, 10, 15, 20, ?', 'Logical', 'Easy', '["25","30","24","22"]', '25', 1.0),
-('Select antonym of "fragile"', 'Verbal', 'Medium', '["Delicate","Sturdy","Weak","Soft"]', 'Sturdy', 1.0),
-('What is 36 ÷ 6?', 'Numerical', 'Easy', '["6","5","7","8"]', '6', 1.0),
-('Which shape rotates to match the pattern?', 'Spatial', 'Medium', '["Triangle","Square","Rectangle","Circle"]', 'Square', 1.0),
-('Do you enjoy AI projects?', 'Tech interest', 'Medium', '["Yes","No"]', 'Yes', 1.0),
-('Do you enjoy mentoring teams?', 'People/Leadership', 'Medium', '["Yes","No"]', 'Yes', 1.0),
-('Find next in series: 3, 9, 27, ?', 'Logical', 'Medium', '["54","72","81","9"]', '81', 1.0),
-('Choose the synonym of "vivid"', 'Verbal', 'Medium', '["Bright","Dull","Faint","Weak"]', 'Bright', 1.0),
-('What is 17 + 23?', 'Numerical', 'Easy', '["40","41","39","42"]', '40', 1.0),
-('Which shape has equal sides?', 'Spatial', 'Medium', '["Square","Triangle","Rectangle","Circle"]', 'Square', 1.0),
-('Do you enjoy robotics?', 'Tech interest', 'Medium', '["Yes","No"]', 'Yes', 1.0),
-('Do you like leading strategic initiatives?', 'People/Leadership', 'Hard', '["Yes","No"]', 'Yes', 1.0);
----50 questions added---
+-- ===== CAREER SEED DATA =====
+
+INSERT INTO careers (title, track, skills, description, avg_salary_range, sample_roles)
+
+VALUES
+
+-- Data Track
+
+('Data Scientist', 'Data',
+
+ '{"skills": ["Analytical Thinking", "Python", "Machine Learning", "Data Visualization"]}',
+
+ 'Data Scientists analyze complex datasets to extract insights and build predictive models for decision-making.',
+
+ 'INR8-25 LPA',
+
+ '["Data Analyst", "Machine Learning Engineer", "Data Engineer"]'),
+
+
+
+('Business Analyst', 'Data',
+
+ '{"skills": ["Analytical Thinking", "SQL", "Communication", "Excel"]}',
+
+ 'Business Analysts interpret data trends to support business strategy and improve performance.',
+
+ 'INR6-18 LPA',
+
+ '["Operations Analyst", "Strategy Analyst", "BI Specialist"]'),
+
+
+
+-- Software Track
+
+('Software Engineer', 'Software',
+
+ '{"skills": ["Programming", "Problem Solving", "Algorithms", "Debugging"]}',
+
+ 'Software Engineers design, develop, and test software applications and systems.',
+
+ 'INR7-20 LPA',
+
+ '["Backend Developer", "Frontend Developer", "Full Stack Developer"]'),
+
+
+
+('DevOps Engineer', 'Software',
+
+ '{"skills": ["Automation", "Linux", "Cloud Infrastructure", "Scripting"]}',
+
+ 'DevOps Engineers streamline software deployment and infrastructure management for faster delivery cycles.',
+
+ 'INR9-22 LPA',
+
+ '["Site Reliability Engineer", "Cloud Engineer", "Infrastructure Specialist"]'),
+
+
+
+-- Product Track
+
+('Product Manager', 'Product',
+
+ '{"skills": ["Communication", "Analytical Thinking", "Leadership", "User Research"]}',
+
+ 'Product Managers lead cross-functional teams to design and deliver impactful products.',
+
+ 'INR12-30 LPA',
+
+ '["Associate Product Manager", "Growth PM", "Technical PM"]'),
+
+
+
+('Business Development Manager', 'Product',
+
+ '{"skills": ["Negotiation", "Strategy", "Market Research", "Communication"]}',
+
+ 'BD Managers identify growth opportunities, partnerships, and market expansion strategies.',
+
+ 'INR8-20 LPA',
+
+ '["Account Manager", "Sales Strategy Lead", "Partnership Manager"]'),
+
+
+
+-- Design Track
+
+('UX Designer', 'Design',
+
+ '{"skills": ["Creativity", "Empathy", "Prototyping", "User Research"]}',
+
+ 'UX Designers craft intuitive and engaging experiences based on user behavior and psychology.',
+
+ 'INR7-18 LPA',
+
+ '["UI Designer", "Interaction Designer", "User Researcher"]'),
+
+
+
+('Graphic Designer', 'Design',
+
+ '{"skills": ["Creativity", "Visual Design", "Adobe Suite", "Branding"]}',
+
+ 'Graphic Designers communicate ideas visually through logos, layouts, and marketing materials.',
+
+ 'INR4-12 LPA',
+
+ '["Brand Designer", "Illustrator", "Visual Communication Specialist"]'),
+
+
+
+-- Health-Informatics Track
+
+('Health Informatics Specialist', 'Health-Informatics',
+
+ '{"skills": ["Empathy", "Data Management", "Healthcare Systems", "Analytics"]}',
+
+ 'Health Informatics Specialists combine healthcare knowledge and IT to optimize patient care through data.',
+
+ 'INR8-22 LPA',
+
+ '["Clinical Data Analyst", "Health IT Consultant", "Medical Data Manager"]'),
+
+
+
+('Clinical Research Associate', 'Health-Informatics',
+
+ '{"skills": ["Empathy", "Attention to Detail", "Medical Knowledge", "Reporting"]}',
+
+ 'CRAs plan and monitor clinical trials to ensure data accuracy and patient safety.',
+
+ 'INR6-18 LPA',
+
+ '["Clinical Data Coordinator", "Regulatory Associate", "Research Monitor"]');
+
+
+
+-- ===== QUESTION SEED DATA =====
+
+INSERT INTO questions (section, difficulty, text, options, correct_option, weight)
+
+VALUES
+
+-- Logical
+
+('logical', 'medium',
+
+ 'If all Bloops are Razzies and all Razzies are Lazzies, are all Bloops definitely Lazzies?',
+
+ '["Yes", "No", "Cannot be determined", "Only sometimes"]',
+
+ 'Yes', 1.0),
+
+
+
+('logical', 'hard',
+
+ 'A train leaves Station A at 6 PM and reaches Station B at 10 PM. Another train leaves Station B at 8 PM and reaches Station A at 11 PM. At what time do they cross each other?',
+
+ '["7 PM", "8:15 PM", "8:30 PM", "8:45 PM"]',
+
+ '8:30 PM', 1.5),
+
+
+
+-- Numerical
+
+('numerical', 'medium',
+
+ 'A company''s profit increased from INR2 lakh to INR2.5 lakh. What is the percentage increase?',
+
+ '["10%", "20%", "25%", "50%"]',
+
+ '25%', 1.0),
+
+
+
+('numerical', 'hard',
+
+ 'If the average of 5 consecutive odd numbers is 25, what is the largest number?',
+
+ '["27", "29", "31", "33"]',
+
+ '29', 1.2),
+
+
+
+-- Verbal
+
+('verbal', 'medium',
+
+ 'Choose the correct synonym for "Ambiguous".',
+
+ '["Clear", "Vague", "Precise", "Certain"]',
+
+ 'Vague', 1.0),
+
+
+
+('verbal', 'hard',
+
+ 'Select the correct option: "She insisted ____ going out."',
+
+ '["in", "on", "at", "for"]',
+
+ 'on', 1.0),
+
+
+
+-- Creative
+
+('creative', 'medium',
+
+ 'You are designing a new logo for an eco-friendly brand. Which concept suits best?',
+
+ '["Tree made of circuit lines", "Burning globe", "Skyscraper silhouette", "Car logo"]',
+
+ 'Tree made of circuit lines', 1.0),
+
+
+
+('creative', 'hard',
+
+ 'A storytelling ad must evoke emotions while promoting a product. Which is the most creative approach?',
+
+ '["Show specs and prices", "Highlight user success story", "Focus on brand colors", "Use only text slides"]',
+
+ 'Highlight user success story', 1.2),
+
+
+
+-- Empathy
+
+('empathy', 'medium',
+
+ 'Your colleague seems withdrawn and quiet during meetings. What should you do?',
+
+ '["Ignore it", "Confront them publicly", "Ask privately if they''re okay", "Report to HR immediately"]',
+
+ 'Ask privately if they''re okay', 1.0),
+
+('empathy', 'hard',
+
+ 'A patient is anxious before surgery. What''s the best response?',
+
+ '["Tell them to relax", "Explain clearly what to expect", "Avoid talking", "Rush through the procedure"]',
+
+ 'Explain clearly what to expect', 1.2);
+

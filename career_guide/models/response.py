@@ -6,6 +6,7 @@ class Response(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     assessment_id = db.Column(db.Integer, db.ForeignKey("assessments.id", ondelete="CASCADE"))
     question_id = db.Column(db.Integer, db.ForeignKey("questions.id", ondelete="CASCADE"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     selected_option = db.Column(db.String(255))
     score = db.Column(db.Float, default=0.0)
 
