@@ -2,10 +2,12 @@
 from flask_login import UserMixin
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from career_guide import db  # make sure this is from __init__.py
+from career_guide import db
+
 
 class User(UserMixin, db.Model):
     __tablename__ = "users"
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
@@ -15,8 +17,6 @@ class User(UserMixin, db.Model):
 
     assessments = db.relationship("Assessment", backref="user", cascade="all, delete-orphan")
     responses = db.relationship("Response", backref="user", cascade="all, delete-orphan")
-    results = db.relationship("Result", backref="user", cascade="all, delete-orphan")
-
 
     @property
     def password(self):
@@ -28,3 +28,9 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def __repr__(self):
+        return f"<User {self.email}>"
+
+    def is_admin_user(self):
+        return self.is_admin

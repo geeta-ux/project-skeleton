@@ -1,41 +1,93 @@
 {% extends "base.html" %}
-{% block content %}
-<h2>Section: {{ section|capitalize }}</h2>
+{% block title %}Section: {{ section_name|capitalize }}{% endblock %}
 
-<form method="post" id="section-form">
-  {% for q in questions %}
-    <div>
-      <p>{{ q.text }}</p>
-      {% for opt in q.options|fromjson %}
-        <label>
-          <input type="radio" name="q_{{ q.id }}" value="{{ opt }}"> {{ opt }}
-        </label><br>
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Section: {{ section_name|capitalize }}</h2>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
       {% endfor %}
-    </div>
-  {% endfor %}
-  <button type="submit">Next</button>
-</form>
+    {% endif %}
+  {% endwith %}
+
+  {% if questions %}
+<form id="assessmentForm" method="POST" action="{{ url_for('assess.submit_section') }}">
+    <input type="hidden" name="assessment_id" value="{{ assessment_id }}">
+    <input type="hidden" name="current_section" value="{{ section_name }}">
+
+    {% for q in questions %}
+      <div class="card mb-3 p-3 shadow-sm">
+        <p><strong>Q{{ loop.index }}. {{ q.text }}</strong></p>
+
+        {% set opts = q.options %}
+        {% if q.options is string %}
+          {% set opts = q.options | safe | loads %}
+        {% endif %}
+
+        {% for opt in opts %}
+          <div class="form-check mt-2">
+            <input class="form-check-input"
+                   type="radio"
+                   name="q_{{ q.id }}"
+                   value="{{ opt }}"
+                   required>
+            <label class="form-check-label">{{ opt }}</label>
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+
+    {% set sections = ["logical", "numerical", "verbal", "creative", "empathy"] %}
+    {% set current_index = sections.index(section_name) if section_name in sections else 0 %}
+
+    {% if current_index + 1 < sections|length %}
+      <button type="submit"
+              name="next_section"
+              value="{{ sections[current_index + 1] }}"
+              class="btn btn-primary mt-3">
+        Next Section →
+      </button>
+    {% else %}
+      <button type="submit"
+              name="finish"
+              value="true"
+              class="btn btn-success mt-3">
+        Finish Assessment
+      </button>
+    {% endif %}
+  </form>
+  {% else %}
+    <p>No questions found for this section.</p>
+  {% endif %}
+</div>
 
 <script>
-let timeLeft = 300;  // 5 minutes per section
-const timer = setInterval(() => {
-  timeLeft--;
-  if(timeLeft <= 0) {
-    clearInterval(timer);
-    document.getElementById("section-form").submit();
-  }
-}, 1000);
-function saveAnswer(qid, ans) {
-  fetch("{{ url_for('assess.autosave') }}", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      question_id: qid,
-      answer: ans,
-      section: "{{ section }}"
-    })
+  // ✅ Autosave on option change
+  document.querySelectorAll('.form-check-input').forEach(input => {
+    input.addEventListener('change', function() {
+      fetch('{{ url_for("assess.autosave") }}', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          assessment_id: '{{ assessment_id }}',
+          question_id: this.name.replace('q_', ''),
+          answer: this.value
+        })
+      });
+    });
   });
-}
+
+  // ✅ Disable submit button while saving
+  document.getElementById('assessmentForm').addEventListener('submit', function() {
+    const btn = this.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = "Saving...";
+  });
 </script>
 {% endblock %}
-    

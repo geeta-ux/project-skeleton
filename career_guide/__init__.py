@@ -1,14 +1,13 @@
+import json
+from datetime import datetime
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
-from datetime import datetime
-
 
 db = SQLAlchemy()
 login_manager = LoginManager()
-login_manager.login_view = "auth.login"
-migrate = Migrate()  # Initialize Flask-Migrate
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
@@ -16,30 +15,40 @@ def create_app():
 
     db.init_app(app)
     login_manager.init_app(app)
-    migrate.init_app(app, db)  # Attach migrate to app and db
+    migrate.init_app(app, db)
+    login_manager.login_view = "auth.login"
 
-    # Import blueprints inside the app context
     with app.app_context():
+        # Register blueprints
         from career_guide.routes.auth import auth_bp
         from career_guide.routes.main import main_bp
+        from career_guide.routes.assess import assess_bp
         from career_guide.routes.admin import admin_bp
         from career_guide.routes.dev import dev_bp
-        from career_guide.routes.assess import assess_bp
-        # Register blueprints
+
         app.register_blueprint(auth_bp)
         app.register_blueprint(main_bp)
+        app.register_blueprint(assess_bp)
         app.register_blueprint(admin_bp)
         app.register_blueprint(dev_bp)
-        app.register_blueprint(assess_bp)
 
-
-        # Create tables if they don't exist (optional)
         db.create_all()
+
+        # ✅ Inject UTC time into templates
         @app.context_processor
         def inject_now():
-         return {'now': datetime.utcnow}
+            return {'now': datetime.utcnow}
 
-    # Flask-Login user loader
+        # ✅ Custom Jinja filter to load JSON strings (named 'loads')
+        @app.template_filter("loads")
+        def loads_filter(value):
+            try:
+                if isinstance(value, (dict, list)):
+                    return value  # already JSON
+                return json.loads(value)
+            except (ValueError, TypeError):
+                return []
+
     @login_manager.user_loader
     def load_user(user_id):
         from career_guide.models.user import User

@@ -94,14 +94,12 @@ def questions():
     if request.method == "POST" and request.form.get("action") == "add":
         text = request.form["text"]
         section = request.form.get("section")
-        difficulty = request.form.get("difficulty")
         options = request.form.get("options")
         correct_option = request.form.get("correct_option")
         weight = request.form.get("weight", 1.0)
 
         question = Question(
             section=section,
-            difficulty=difficulty,
             text=text,
             options=options,
             correct_option=correct_option,
@@ -117,7 +115,6 @@ def questions():
         q_id = int(request.form.get("question_id"))
         question = Question.query.get_or_404(q_id)
         question.section = request.form.get("section")
-        question.difficulty = request.form.get("difficulty")
         question.text = request.form.get("text")
         question.options = request.form.get("options")
         question.correct_option = request.form.get("correct_option")

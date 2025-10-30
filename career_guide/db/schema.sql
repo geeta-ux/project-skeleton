@@ -22,7 +22,6 @@ CREATE TABLE users (
 CREATE TABLE questions (
     id SERIAL PRIMARY KEY,
     section VARCHAR(100),
-    difficulty VARCHAR(50),
     text TEXT NOT NULL,
     options JSONB NOT NULL,
     correct_option VARCHAR(255),

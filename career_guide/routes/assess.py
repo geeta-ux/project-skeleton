@@ -1,6 +1,5 @@
-# career_guide/routes/assess.py
 from flask import (
-    Blueprint, render_template, request,
+    Blueprint, json, render_template, request,
     redirect, url_for, jsonify, flash, session
 )
 from flask_login import login_required, current_user
@@ -15,8 +14,9 @@ from career_guide.services.scoring import calculate_scores
 from career_guide.services.planning import map_scores_to_tracks
 
 
-# ✅ single consistent blueprint
 assess_bp = Blueprint("assess", __name__, url_prefix="/assess")
+
+SECTIONS = ["logical", "numerical", "verbal", "creative", "empathy"]
 
 
 # ---- START ASSESSMENT ----
@@ -28,33 +28,40 @@ def start():
     db.session.add(assessment)
     db.session.commit()
 
-    # store in session for subsequent routes
     session["assessment_id"] = assessment.id
-
     flash("Assessment started!", "info")
-    return redirect(url_for("assess.section", name="aptitude", assessment_id=assessment.id))
+    return redirect(url_for("assess.section", name="logical", assessment_id=assessment.id))
 
 
 # ---- SECTION PAGE ----
 @assess_bp.route("/section/<name>")
 @login_required
 def section(name):
-    """Render a section with its questions"""
     assessment_id = request.args.get("assessment_id") or session.get("assessment_id")
+    section_name = name.lower()
 
-    if not assessment_id:
-        flash("No active assessment found.", "warning")
-        return redirect(url_for("assess.start"))
+    questions = Question.query.filter_by(section=section_name).all()
 
-    assessment = Assessment.query.get_or_404(assessment_id)
-    questions = Question.query.filter_by(section=name).all()
+    for q in questions:
+        try:
+            if isinstance(q.options, str):
+                q.options = json.loads(q.options)
+        except Exception as e:
+            print(f"Error parsing options for question {q.id}: {e}")
+            q.options = []
+
+    next_section = None
+    if section_name in SECTIONS:
+        idx = SECTIONS.index(section_name)
+        if idx + 1 < len(SECTIONS):
+            next_section = SECTIONS[idx + 1]
 
     return render_template(
         "assess/section.html",
-        section=name,
+        section_name=section_name,
         questions=questions,
-        assessment_id=assessment.id,
-        user=current_user
+        assessment_id=assessment_id,
+        next_section=next_section
     )
 
 
@@ -79,8 +86,8 @@ def autosave():
         response = Response(
             assessment_id=assessment_id,
             question_id=qid,
-            selected_option=answer,
-            user_id=current_user.id  # ✅ tie response to current user
+            answer=answer,
+            user_id=current_user.id
         )
         db.session.add(response)
     else:
@@ -90,45 +97,79 @@ def autosave():
     return jsonify({"status": "ok"})
 
 
-# ---- SUBMIT ----
+# ---- SUBMIT SECTION ----
 @assess_bp.route("/submit", methods=["POST"])
 @login_required
-def submit_assessment():
-    """Finalize assessment → score → map → results"""
-    user_id = current_user.id
+def submit_section():
+    """Handle section submission → save answers → move to next or finish"""
     assessment_id = session.get("assessment_id")
+    current_section = request.form.get("current_section", "").lower()
 
-    if not assessment_id:
-        flash("No active assessment session found.", "warning")
+    if not assessment_id or not current_section:
+        flash("Invalid submission. Please restart assessment.", "warning")
         return redirect(url_for("assess.start"))
 
-    # 1️⃣ Compute normalized section scores
-    scores = calculate_scores(user_id, assessment_id)
-
-    # 2️⃣ Map scores → career tracks
-    track_info = map_scores_to_tracks(scores)
-
-    # 3️⃣ Save to Result table
-    result = Result.query.filter_by(user_id=user_id, assessment_id=assessment_id).first()
-    if not result:
-        result = Result(
-            user_id=user_id,
-            assessment_id=assessment_id,
-            primary_track=track_info["primary_track"],
-            secondary_track=track_info["secondary_track"],
-            created_at=datetime.utcnow()
-        )
-        db.session.add(result)
-    else:
-        result.primary_track = track_info["primary_track"]
-        result.secondary_track = track_info["secondary_track"]
+    # ✅ Save responses for current section
+    for key, value in request.form.items():
+        if key.startswith("q_"):  # e.g., q_1, q_2
+            qid = int(key.split("_")[1])
+            response = Response.query.filter_by(
+                assessment_id=assessment_id, question_id=qid
+            ).first()
+            if not response:
+                response = Response(
+                    assessment_id=assessment_id,
+                    question_id=qid,
+                    answer=value,
+                    user_id=current_user.id
+                )
+                db.session.add(response)
+            else:
+                response.selected_option = value
 
     db.session.commit()
 
-    # 4️⃣ Render results page
-    return render_template(
-        "results/summary.html",
-        scores=scores,
-        track_info=track_info,
-        user=current_user
+    # ✅ Find next section
+    if current_section not in SECTIONS:
+        flash("Invalid section name.", "danger")
+        return redirect(url_for("assess.start"))
+
+    idx = SECTIONS.index(current_section)
+    if idx + 1 < len(SECTIONS):
+        next_section = SECTIONS[idx + 1]
+        flash(f"Section '{current_section.capitalize()}' submitted! Moving to {next_section.capitalize()} section.", "info")
+        return redirect(url_for("assess.section", name=next_section, assessment_id=assessment_id))
+
+    # ✅ All sections completed → finalize assessment
+    flash("All sections completed! Generating your results...", "success")
+
+    user_id = current_user.id
+    scores = calculate_scores(user_id, assessment_id)
+    track_info = map_scores_to_tracks(scores)
+
+    result = Result.query.filter_by(user_id=current_user.id, assessment_id=assessment_id).first()
+
+    if not result:
+      result = Result(
+        user_id=current_user.id,
+        assessment_id=assessment_id,
+        scores=scores,  # ✅ Save scores JSONB
+        primary_track=track_info.get("primary_track"),
+        secondary_track=track_info.get("secondary_track"),
+        created_at=datetime.utcnow()
     )
+      db.session.add(result)
+    else:
+      result.scores = scores  # ✅ Update scores if re-submitted
+      result.primary_track = track_info.get("primary_track")
+      result.secondary_track = track_info.get("secondary_track")
+
+    db.session.commit()
+
+# ✅ Render summary page
+    return render_template(
+    "results/summary.html",
+    scores=scores,
+    track_info=track_info,
+    user=current_user
+)

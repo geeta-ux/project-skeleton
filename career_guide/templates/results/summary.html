@@ -1,27 +1,57 @@
 {% extends "base.html" %}
+
+{% block title %}Your Career Assessment Results{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
-  <h2>Assessment Results</h2>
-  <hr>
-  <p><strong>Primary Track:</strong> {{ track_info.primary_track }}</p>
-  <p><strong>Secondary Track:</strong> {{ track_info.secondary_track }}</p>
-
-  <h4>Section Scores</h4>
-  <ul>
-    {% for section, score in scores.items() %}
-      <li>{{ section|capitalize }}: {{ (score * 100) | round(1) }}%</li>
-    {% endfor %}
-  </ul>
-</div>
-<h3>Top Career Matches – {{ track_info.primary_track }}</h3>
-{% for rec in recommendations %}
-  <div class="card my-3 p-3 shadow-sm">
-    <h5>{{ rec.career }} ({{ rec.score }})</h5>
-    <p>{{ rec.description }}</p>
-    <ul>
-      {% for reason in rec.rationale %}
-        <li>{{ reason }}</li>
-      {% endfor %}
-    </ul>
+  <div class="text-center mb-4">
+    <h1 class="fw-bold text-primary">Career Assessment Results</h1>
+    <p class="lead">Well done, {{ user.name }}! Here's your personalized career insight.</p>
   </div>
+
+  <!-- Scores Table -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h4 class="mb-3">Your Section Scores</h4>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Skill Area</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for skill, score in scores.items() %}
+          <tr>
+            <td>{{ skill|capitalize }}</td>
+            <td>{{ "%.2f"|format(score) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Career Recommendations -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h4 class="mb-3 text-success">Recommended Career Paths</h4>
+      <p><strong>Primary Track:</strong> {{ track_info.primary_track }}</p>
+      <p><strong>Secondary Track:</strong> {{ track_info.secondary_track }}</p>
+
+      <div class="mt-3">
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-primary">
+          Back to Dashboard
+        </a>
+        <a href="{{ url_for('admin.careers') }}" class="btn btn-success">
+          <!-- Explore Careers -->
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center text-muted mt-5">
+    <!-- <p>© {{ now().year }} Career Guidance Platform</p> -->
+  </footer>
+</div>
 {% endblock %}
