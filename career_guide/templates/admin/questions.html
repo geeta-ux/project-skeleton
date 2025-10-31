@@ -18,10 +18,7 @@
     <label>Section</label>
     <input type="text" name="section" class="form-control">
   </div>
-  <div class="mb-3">
-    <label>Difficulty</label>
-    <input type="text" name="difficulty" class="form-control">
-  </div>
+  
   <div class="mb-3">
     <label>Question Text</label>
     <textarea name="text" class="form-control" required></textarea>
@@ -50,7 +47,7 @@
     <tr>
       <th>ID</th>
       <th>Section</th>
-      <th>Difficulty</th>
+      <!-- <th>Difficulty</th> -->
       <th>Question</th>
       <th>Actions</th>
     </tr>
@@ -60,7 +57,7 @@
     <tr>
       <td>{{ q.id }}</td>
       <td>{{ q.section }}</td>
-      <td>{{ q.difficulty }}</td>
+      <!-- <td>{{ q.difficulty }}</td> -->
       <td>{{ q.text }}</td>
       <td>
         <!-- Edit Form (inline) -->
@@ -83,10 +80,10 @@
                     <label>Section</label>
                     <input type="text" name="section" class="form-control" value="{{ q.section }}">
                   </div>
-                  <div class="mb-3">
+                  <!-- <div class="mb-3">
                     <label>Difficulty</label>
                     <input type="text" name="difficulty" class="form-control" value="{{ q.difficulty }}">
-                  </div>
+                  </div> -->
                   <div class="mb-3">
                     <label>Question Text</label>
                     <textarea name="text" class="form-control">{{ q.text }}</textarea>

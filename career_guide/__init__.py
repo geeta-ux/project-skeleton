@@ -25,12 +25,15 @@ def create_app():
         from career_guide.routes.assess import assess_bp
         from career_guide.routes.admin import admin_bp
         from career_guide.routes.dev import dev_bp
+        from career_guide.routes.results import results_bp   # ✅ add this line
+
 
         app.register_blueprint(auth_bp)
         app.register_blueprint(main_bp)
         app.register_blueprint(assess_bp)
         app.register_blueprint(admin_bp)
         app.register_blueprint(dev_bp)
+        app.register_blueprint(results_bp)
 
         db.create_all()
 

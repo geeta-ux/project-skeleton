@@ -22,8 +22,8 @@ class User(UserMixin, db.Model):
     def password(self):
         raise AttributeError("Password is write-only.")
 
-    @password.setter
-    def password(self, password):
+    def set_password(self, password):
+        """Hashes and sets the user's password."""
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):

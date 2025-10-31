@@ -12,6 +12,7 @@ from career_guide.models.result import Result
 from career_guide.models.question import Question
 from career_guide.services.scoring import calculate_scores
 from career_guide.services.planning import map_scores_to_tracks
+from career_guide.models import career
 
 
 assess_bp = Blueprint("assess", __name__, url_prefix="/assess")
@@ -129,7 +130,7 @@ def submit_section():
 
     db.session.commit()
 
-    # ✅ Find next section
+     # ✅ Find next section
     if current_section not in SECTIONS:
         flash("Invalid section name.", "danger")
         return redirect(url_for("assess.start"))
@@ -137,39 +138,59 @@ def submit_section():
     idx = SECTIONS.index(current_section)
     if idx + 1 < len(SECTIONS):
         next_section = SECTIONS[idx + 1]
-        flash(f"Section '{current_section.capitalize()}' submitted! Moving to {next_section.capitalize()} section.", "info")
-        return redirect(url_for("assess.section", name=next_section, assessment_id=assessment_id))
+        flash(
+            f"Section '{current_section.capitalize()}' submitted! Moving to {next_section.capitalize()} section.",
+            "info"
+        )
+        return redirect(
+            url_for("assess.section", name=next_section, assessment_id=assessment_id)
+        )
 
     # ✅ All sections completed → finalize assessment
     flash("All sections completed! Generating your results...", "success")
 
     user_id = current_user.id
-    scores = calculate_scores(user_id, assessment_id)
-    track_info = map_scores_to_tracks(scores)
+    score_data = calculate_scores(user_id, assessment_id,method="zscore")
 
+    # 🩹 Ensure numeric values before mapping
+    clean_scores = score_data.get("normalized_scores", {})
+    # for key, val in scores.items():
+    #  # Only include actual section names, not meta fields
+    #   if key.lower() in ["logical", "numerical", "verbal", "creative", "empathy"]:
+    #     try:
+    #         if isinstance(val, dict):
+    #             numeric_val = float(val.get("normalized", val.get("value", 0)))
+    #         else:
+    #             numeric_val = float(val)
+    #     except (TypeError, ValueError):
+    #         numeric_val = 0.0
+    #     clean_scores[key] = numeric_val
+
+    # ✅ Map scores safely
+    track_info = {
+    "primary_track": score_data.get("primary_track"),
+    "secondary_track": score_data.get("secondary_track")
+}
+    # ✅ Save/update result
     result = Result.query.filter_by(user_id=current_user.id, assessment_id=assessment_id).first()
 
     if not result:
-      result = Result(
-        user_id=current_user.id,
-        assessment_id=assessment_id,
-        scores=scores,  # ✅ Save scores JSONB
-        primary_track=track_info.get("primary_track"),
-        secondary_track=track_info.get("secondary_track"),
-        created_at=datetime.utcnow()
-    )
-      db.session.add(result)
+        result = Result(
+            user_id=current_user.id,
+            assessment_id=assessment_id,
+            scores=clean_scores,  # ✅ Save cleaned numeric scores
+            primary_track=track_info.get("primary_track"),
+            secondary_track=track_info.get("secondary_track"),
+            created_at=datetime.utcnow()
+        )
+        db.session.add(result)
     else:
-      result.scores = scores  # ✅ Update scores if re-submitted
-      result.primary_track = track_info.get("primary_track")
-      result.secondary_track = track_info.get("secondary_track")
+        result.scores = clean_scores
+        result.primary_track = track_info.get("primary_track")
+        result.secondary_track = track_info.get("secondary_track")
 
     db.session.commit()
+    return redirect(url_for("results.view_result", result_id=result.id))
 
-# ✅ Render summary page
-    return render_template(
-    "results/summary.html",
-    scores=scores,
-    track_info=track_info,
-    user=current_user
-)
+
+    
