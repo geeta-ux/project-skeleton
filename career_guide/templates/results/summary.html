@@ -96,7 +96,61 @@
     <p>No career recommendations available for this track.</p>
   </div>
   {% endif %}
+  {% if skill_gaps %}
+  <div class="mt-5">
+    <h4 class="fw-bold text-center text-primary mb-4">Skill Gap Analysis</h4>
 
+    <div class="card shadow-sm rounded-4 border-0 p-4 bg-light">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-primary">
+            <tr class="text-center">
+              <th>Skill</th>
+              <th>Domain</th>
+              <th>Gap</th>
+              <th>Recommended Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for g in skill_gaps %}
+            <tr>
+              <td class="fw-semibold">{{ g.skill }}</td>
+              <td>{{ g.domain }}</td>
+              <td class="text-center">
+                {% if g.gap > 0.3 %}
+                  <span class="badge bg-danger-subtle text-danger rounded-pill px-3 py-2">
+                    {{ "%.2f"|format(g.gap) }} ⚠️
+                  </span>
+                {% elif g.gap > 0.1 %}
+                  <span class="badge bg-warning-subtle text-dark rounded-pill px-3 py-2">
+                    {{ "%.2f"|format(g.gap) }}
+                  </span>
+                {% else %}
+                  <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2">
+                    {{ "%.2f"|format(g.gap) }}
+                  </span>
+                {% endif %}
+              </td>
+              <td>
+                <ul class="mb-0 small">
+                  {% for rec in g.recommendations %}
+                  <li>{{ rec }}</li>
+                  {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div class="alert alert-success mt-5 text-center shadow-sm rounded-4">
+    <h5 class="fw-bold mb-2">🎉 No Skill Gaps Found!</h5>
+    <p class="mb-0 text-muted">You’re already aligned with your target career’s required skills.</p>
+  </div>
+{% endif %}
   <!-- Return Button -->
   <div class="text-center mt-4">
     <a href="{{ url_for('auth.dashboard') }}" class="btn btn-primary px-4 py-2 shadow rounded-pill">

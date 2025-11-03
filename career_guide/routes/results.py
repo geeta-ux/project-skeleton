@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from career_guide.models.result import Result
 from career_guide.services.matching import get_top_careers
 from career_guide.services.planning import generate_5year_plan
-
+from career_guide.services.skill_gap import analyze_skill_gaps
 
 results_bp = Blueprint("results", __name__, url_prefix="/results")
 
@@ -21,13 +21,17 @@ def view_result(result_id):
         "track_scores": scores,
     }
 
-    # ✅ 1️⃣ Call the matching service
+    # ✅ 1️⃣ Get top careers for the user’s primary track
     recommended_careers = get_top_careers(result.primary_track, scores)
 
-    plan = generate_5year_plan(result.primary_track, result.career_name, result.scores)
+    # ✅ 2️⃣ Generate a 5-year plan based on the top career (if available)
+    top_career_title = recommended_careers[0]["career"].title if recommended_careers else None
+    plan = generate_5year_plan(result.primary_track, top_career_title, scores)
 
+    # ✅ 3️⃣ Analyze skill gaps for that top career
+    gaps = analyze_skill_gaps(top_career_title or result.primary_track, scores)
 
-    # ✅ 2️⃣ Pass recommendations to the template
+    # ✅ 4️⃣ Pass everything to the results template
     return render_template(
         "results/summary.html",
         result=result,
@@ -35,5 +39,6 @@ def view_result(result_id):
         track_info=track_info,
         careers=recommended_careers,
         plan=plan,
+        skill_gaps=gaps,
         user=current_user
     )
