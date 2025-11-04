@@ -11,3 +11,10 @@ class Career(db.Model):
     description = db.Column(db.Text)
     avg_salary_range = db.Column(db.String(100))
     sample_roles = db.Column(JSONB)  # ✅ changed from db.JSON → JSONB
+
+    knowledge_items = db.relationship(
+    "CareerKB",
+    back_populates="career",
+    cascade="all, delete-orphan"
+)
+from .career_kb import CareerKB

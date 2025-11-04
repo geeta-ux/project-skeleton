@@ -136,13 +136,13 @@ VALUES
 
 -- ===== QUESTION SEED DATA =====
 
-INSERT INTO questions (section, difficulty, text, options, correct_option, weight)
+INSERT INTO questions (section,text, options, correct_option, weight)
 
 VALUES
 
 -- Logical
 
-('logical', 'medium',
+('logical',
 
  'If all Bloops are Razzies and all Razzies are Lazzies, are all Bloops definitely Lazzies?',
 
@@ -152,7 +152,7 @@ VALUES
 
 
 
-('logical', 'hard',
+('logical',
 
  'A train leaves Station A at 6 PM and reaches Station B at 10 PM. Another train leaves Station B at 8 PM and reaches Station A at 11 PM. At what time do they cross each other?',
 
@@ -164,7 +164,7 @@ VALUES
 
 -- Numerical
 
-('numerical', 'medium',
+('numerical',
 
  'A company''s profit increased from INR2 lakh to INR2.5 lakh. What is the percentage increase?',
 
@@ -174,7 +174,7 @@ VALUES
 
 
 
-('numerical', 'hard',
+('numerical',
 
  'If the average of 5 consecutive odd numbers is 25, what is the largest number?',
 
@@ -186,7 +186,7 @@ VALUES
 
 -- Verbal
 
-('verbal', 'medium',
+('verbal',
 
  'Choose the correct synonym for "Ambiguous".',
 
@@ -196,7 +196,7 @@ VALUES
 
 
 
-('verbal', 'hard',
+('verbal',
 
  'Select the correct option: "She insisted ____ going out."',
 
@@ -208,7 +208,7 @@ VALUES
 
 -- Creative
 
-('creative', 'medium',
+('creative',
 
  'You are designing a new logo for an eco-friendly brand. Which concept suits best?',
 
@@ -218,7 +218,7 @@ VALUES
 
 
 
-('creative', 'hard',
+('creative',
 
  'A storytelling ad must evoke emotions while promoting a product. Which is the most creative approach?',
 
@@ -230,7 +230,7 @@ VALUES
 
 -- Empathy
 
-('empathy', 'medium',
+('empathy',
 
  'Your colleague seems withdrawn and quiet during meetings. What should you do?',
 
@@ -238,7 +238,7 @@ VALUES
 
  'Ask privately if they''re okay', 1.0),
 
-('empathy', 'hard',
+('empathy',
 
  'A patient is anxious before surgery. What''s the best response?',
 
