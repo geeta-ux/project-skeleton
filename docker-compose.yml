@@ -1,0 +1,59 @@
+# version: "3.8"
+services:
+# === MinIO for Milvus object storage ===
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    ports:
+      - "9000:9000"
+    command: server /data
+    volumes:
+      # - "C:/Users/Geetanjali/Documents/project-skeleton/career_guide_ai/minio_data:/data"
+      - ./minio_data:/data
+    restart: always
+  # === Milvus Vector Database ===
+  milvus:
+    image: milvusdb/milvus:v2.4.3
+    container_name: milvus-standalone
+    command: ["milvus", "run", "standalone"]
+    environment:
+      TZ: Asia/Kolkata
+      MINIO_USE_EMBED: "false"           # Disable embedded MinIO
+      MINIO_ADDRESS: "minio:9000"
+      MINIO_ACCESS_KEY: "minio"
+      MINIO_SECRET_KEY: "minio123"
+      ETCD_USE_EMBED: "true"
+    depends_on:
+      - minio
+    ports:
+      - "19530:19530"  # gRPC API
+      - "9091:9091"    # Dashboard
+    volumes:
+      # - "C:/Users/Geetanjali/Documents/project-skeleton/career_guide_ai/milvus_data:/var/lib/milvus"
+
+      - ./milvus_data:/var/lib/milvus
+    restart: always
+
+  # === PostgreSQL Database ===
+  postgres:
+    image: postgres:15
+    container_name: pg-career-ai
+    environment:
+      POSTGRES_USER: career_user
+      POSTGRES_PASSWORD: career_pass
+      POSTGRES_DB: career_guide_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      # - "C:/Users/Geetanjali/Documents/project-skeleton/career_guide_ai/pg_data:/var/lib/postgresql/data"
+      - ./pg_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  milvus_data:
+  pg_data:
+  minio_data:
+

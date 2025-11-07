@@ -151,6 +151,20 @@
     <p class="mb-0 text-muted">You’re already aligned with your target career’s required skills.</p>
   </div>
 {% endif %}
+<!-- Semantic Search (Career Knowledge Base) -->
+<div class="mt-5">
+  <h4 class="fw-bold text-center text-primary mb-4">🔍 Explore Career Knowledge Base</h4>
+  <div class="input-group mb-3 shadow-sm rounded-pill">
+    <input type="text" id="queryInput" class="form-control form-control-lg border-0 ps-4"
+           placeholder="Ask something like 'best data analyst roadmap'...">
+    <button class="btn btn-primary rounded-pill px-4" id="searchBtn">Search</button>
+  </div>
+
+  <div id="searchResults" class="mt-4"></div>
+</div>
+
+
+
   <!-- Return Button -->
   <div class="text-center mt-4">
     <a href="{{ url_for('auth.dashboard') }}" class="btn btn-primary px-4 py-2 shadow rounded-pill">
@@ -212,4 +226,39 @@
     }
   });
 </script>
+<script>
+document.getElementById('searchBtn').addEventListener('click', async () => {
+  const query = document.getElementById('queryInput').value.trim();
+  if (!query) return;
+
+  const resDiv = document.getElementById('searchResults');
+  resDiv.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>';
+
+  const response = await fetch('/api/retrieve_kb', {  // ✅ correct endpoint
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ query })
+  });
+
+  const data = await response.json();
+  if (data.results && data.results.length > 0) {
+    resDiv.innerHTML = `
+      <h5 class="fw-bold text-secondary mb-3">Top Results</h5>
+      <ul class="list-group">
+        ${data.results.map(r => `<li class="list-group-item">${r.text}</li>`).join('')}
+      </ul>
+    `;
+  } else {
+    resDiv.innerHTML = '<p class="text-muted">No relevant content found.</p>';
+  }
+});
+
+document.getElementById('queryInput').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    document.getElementById('searchBtn').click();
+  }
+});
+</script>
+
 {% endblock %}
