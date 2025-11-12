@@ -26,7 +26,7 @@ def create_app():
         from career_guide.routes.admin import admin_bp
         from career_guide.routes.dev import dev_bp
         from career_guide.routes.results import results_bp 
-        from career_guide.routes.retrieve import retrieve_bp 
+        from career_guide.routes.api import bp as retrieve_kb
 
 
         app.register_blueprint(auth_bp)
@@ -35,7 +35,7 @@ def create_app():
         app.register_blueprint(admin_bp)
         app.register_blueprint(dev_bp)
         app.register_blueprint(results_bp)
-        app.register_blueprint(retrieve_bp)
+        app.register_blueprint(retrieve_kb)
 
         db.create_all()
 
