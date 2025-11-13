@@ -164,6 +164,13 @@
       Return to Dashboard
     </a>
   </div>
+  <div class="text-center mt-4">
+  <a href="{{ url_for('results.download_plan', result_id=result.id) }}"
+     class="btn btn-success px-4 py-2 shadow rounded-pill">
+    Download Plan (PDF)
+  </a>
+</div>
+
 </div>
 
 <!-- Chart.js -->

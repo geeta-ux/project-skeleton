@@ -1,5 +1,12 @@
-from flask import Blueprint, render_template
+from io import BytesIO
+import io
+from flask import Blueprint, make_response, render_template
 from flask_login import login_required, current_user
+# from weasyprint import HTML
+from xhtml2pdf import pisa
+import os
+from flask import Blueprint, send_file, abort
+from career_guide.services.planning_service import generate_plan_pdf
 from career_guide.models.result import Result
 from career_guide.services.matching import get_top_careers
 from career_guide.services.planning import generate_5year_plan
@@ -41,4 +48,22 @@ def view_result(result_id):
         plan=plan,
         skill_gaps=gaps,
         user=current_user
+    )
+
+@results_bp.route("/download_plan/<int:result_id>")
+@login_required
+def download_plan(result_id):
+    # Fetch result
+    result = Result.query.get(result_id)
+    if not result or result.user_id != current_user.id:
+        abort(404)
+
+    # Generate the plan (PDF or text)
+    pdf_data = generate_plan_pdf(result)
+
+    return send_file(
+        io.BytesIO(pdf_data),
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name=f"career_plan_{result.id}.pdf"
     )
